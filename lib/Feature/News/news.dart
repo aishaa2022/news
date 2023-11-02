@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:news/Core/local_app.dart';
 import 'package:news/model/listview.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -24,30 +27,63 @@ class _News_pageState extends State<News_page> {
         child: Scaffold(
           body: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      const Text(
-                        "Hello, Aisha",
-                        style: TextStyle(fontSize: 17, color: Colors.white),
-                      ),
-                      Text(
-                        "have anice day",
-                        style: TextStyle(fontSize: 11, color: AppColors.grey),
-                      )
-                    ],
-                  ),
-                  const CircleAvatar(
-                    radius: 25,
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      radius: 22,
-                      backgroundImage: AssetImage("assets/user.jpg"),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        FutureBuilder(
+                          future: LocalApp.getData(LocalApp.nameKey),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Text(
+                                "Hello, ${snapshot.data}",
+                                style: const TextStyle(
+                                    fontSize: 17, color: Colors.white),
+                              );
+                            } else {
+                              return const Text(
+                                "Hello, ",
+                                style: TextStyle(
+                                    fontSize: 17, color: Colors.white),
+                              );
+                            }
+                          },
+                        ),
+                        Text(
+                          "have anice day",
+                          style: TextStyle(fontSize: 11, color: AppColors.grey),
+                        )
+                      ],
                     ),
-                  ),
-                ],
+                    FutureBuilder(
+                      future: LocalApp.getData(LocalApp.imagKey),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Colors.white,
+                            child: CircleAvatar(
+                              radius: 22,
+                              backgroundImage: FileImage(File(snapshot.data!)),
+                            ),
+                          );
+                        } else {
+                          return const CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Colors.white,
+                            child: CircleAvatar(
+                              radius: 22,
+                              backgroundImage: AssetImage("assets/user.jpg"),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 10,

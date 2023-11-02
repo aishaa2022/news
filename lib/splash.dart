@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:news/Auth/login.dart';
 import 'package:news/Core/colors.dart';
+import 'package:news/Core/local_app.dart';
+import 'package:news/Feature/Home/home.dart';
+import 'package:news/Feature/Profile/uoload.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -14,8 +16,10 @@ class _SplashState extends State<Splash> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 4), () {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const Login()));
+      LocalApp.getload(LocalApp.isUpload).then((value) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => value ? const Home() : const UoloadView()));
+      });
     });
   }
 
